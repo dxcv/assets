@@ -2,7 +2,7 @@ import os
 
 def main():
     bokeh_cmd = 'bokeh.exe serve'
-    assets = ['currency', 'interest']
+    assets = ['currency', 'interest', 'bond']
 
     os.system('%s %s --host * --port 5001'%(bokeh_cmd, ' '.join(assets)))
 
