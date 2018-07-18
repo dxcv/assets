@@ -14,6 +14,8 @@ from bokeh.models.widgets import Slider, TextInput, TableColumn, DataTable, Sele
 from bokeh.plotting import figure
 from bokeh.palettes import Spectral9
 
+COLORS = Spectral9 + ["#053061", "#2166ac", "#4393c3" "#92c5de", "#d1e5f0"]
+
 # 中美10年期国债利率与利差
 source_chusa = ColumnDataSource(data=dict(date=[], ch10y=[], usa10y=[], spread=[]))
 def update_chusa():
@@ -153,9 +155,9 @@ def update_all():
 
 tools = "pan,wheel_zoom,box_select,reset"
 plot_chusa = figure(plot_height=500, plot_width=1200, tools=tools, x_axis_type='datetime')
-plot_chusa.line('date', 'ch10y', source=source_chusa, color='red', legend=u'中国10年期国债收益率')
+plot_chusa.line('date', 'ch10y', source=source_chusa, color='#d53e4f', legend=u'中国10年期国债收益率')
 plot_chusa.line('date', 'usa10y', source=source_chusa, legend=u'美国10年期国债收益率')
-plot_chusa.line('date', 'spread', source=source_chusa, color='green', legend=u'中美10年期国债利差')
+plot_chusa.line('date', 'spread', source=source_chusa, color='#66CC66', legend=u'中美10年期国债利差')
 plot_chusa.title.text_font_size = "15pt"
 plot_chusa.title.text = u'中美10年期国债收益率与利差'
 plot_chusa.title.text_font = "Microsoft YaHei"
@@ -163,7 +165,7 @@ plot_chusa.yaxis.formatter = NumeralTickFormatter(format="0.00%")
 plot_chusa.yaxis.minor_tick_line_color = None
 
 plot_usa_treasury = figure(plot_height=500, plot_width=1200, tools=tools, x_axis_type='datetime')
-plot_usa_treasury.line('date', 'usa10y', source=source_usa_treasury, color='red', legend=u'美国10年期国债收益率')
+plot_usa_treasury.line('date', 'usa10y', source=source_usa_treasury, color='#d53e4f', legend=u'美国10年期国债收益率')
 plot_usa_treasury.line('date', 'usa2y', source=source_usa_treasury, legend=u'美国2年期国债收益率')
 plot_usa_treasury.title.text_font_size = "15pt"
 plot_usa_treasury.title.text = u'美国2年、10年期国债收益率'
@@ -174,7 +176,7 @@ plot_usa_treasury.yaxis.minor_tick_line_color = None
 plot_ted = figure(plot_height=500, plot_width=1200, tools=tools, x_axis_type='datetime')
 plot_ted.line('date', 'shibor3m', source=source_ted, color='#FF9999', line_width=2, legend='SHIBOR：3个月')
 plot_ted.line('date', 'cgb3m', source=source_ted, line_width=2, legend=u'3个月国债收益率')
-plot_ted.line('date', 'spread', source=source_ted, color='green', line_width=2, legend=u'利差')
+plot_ted.line('date', 'spread', source=source_ted, color='#66CC66', line_width=2, legend=u'利差')
 plot_ted.title.text_font_size = "15pt"
 plot_ted.title.text = u'TED Spread'
 plot_ted.title.text_font = "Microsoft YaHei"
@@ -184,7 +186,7 @@ plot_ted.yaxis.minor_tick_line_color = None
 plot_cgb10y_1y = figure(plot_height=500, plot_width=1200, tools=tools, x_axis_type='datetime')
 plot_cgb10y_1y.line('date', 'cgb10y', source=source_cgb10y_1y, color='#990000', line_width=2, legend=u'10年期国债收益率')
 plot_cgb10y_1y.line('date', 'cgb1y', source=source_cgb10y_1y, color='#FF9999', line_width=2, legend=u'1年期国债收益率')
-plot_cgb10y_1y.line('date', 'spread', source=source_cgb10y_1y, color='green', line_width=2, legend=u'利差')
+plot_cgb10y_1y.line('date', 'spread', source=source_cgb10y_1y, color='#66CC66', line_width=2, legend=u'利差')
 plot_cgb10y_1y.title.text_font_size = "15pt"
 plot_cgb10y_1y.title.text = u'10年期国债收益率-1年期国债收益率（GDP领先指标）'
 plot_cgb10y_1y.title.text_font = "Microsoft YaHei"
@@ -194,7 +196,7 @@ plot_cgb10y_1y.yaxis.minor_tick_line_color = None
 plot_cdb10y_1y = figure(plot_height=500, plot_width=1200, tools=tools, x_axis_type='datetime')
 plot_cdb10y_1y.line('date', 'cdb10y', source=source_cdb10y_1y, color='#990000', line_width=2, legend=u'10年期国开债收益率')
 plot_cdb10y_1y.line('date', 'cdb1y', source=source_cdb10y_1y, color='#FF9999', line_width=2, legend=u'1年期国开债收益率')
-plot_cdb10y_1y.line('date', 'spread', source=source_cdb10y_1y, color='green', line_width=2, legend=u'利差')
+plot_cdb10y_1y.line('date', 'spread', source=source_cdb10y_1y, color='#66CC66', line_width=2, legend=u'利差')
 plot_cdb10y_1y.title.text_font_size = "15pt"
 plot_cdb10y_1y.title.text = u'10年期国开债收益率-1年期国开债收益率'
 plot_cdb10y_1y.title.text_font = "Microsoft YaHei"
@@ -213,7 +215,7 @@ plot_corporate.yaxis.minor_tick_line_color = None
 plot_credit = figure(plot_height=500, plot_width=1200, tools=tools, x_axis_type='datetime')
 plot_credit.line('date', 'cbaa5y', source=source_credit, color='red', line_width=2, legend=u'企业债（AA）：5年')
 plot_credit.line('date', 'prod6m', source=source_credit, color='#000099', line_width=2, legend=u'理财产品预期年化收益率：6个月')
-plot_credit.line('date', 'spread', source=source_credit, color='green', line_width=2, legend=u'利差')
+plot_credit.line('date', 'spread', source=source_credit, color='#66CC66', line_width=2, legend=u'利差')
 plot_credit.title.text_font_size = "15pt"
 plot_credit.title.text = u'企业债与银行理财利差（信用利差）'
 plot_credit.title.text_font = "Microsoft YaHei"
@@ -243,7 +245,7 @@ plot_cny.yaxis.minor_tick_line_color = None
 plot_cdb = figure(plot_height=500, plot_width=1200, tools=tools, x_axis_type='datetime')
 plot_cdb.line('date', 'cdb', source=source_cdb, color='#990000', line_width=2, legend=u'10年期国开债收益率')
 plot_cdb.line('date', 'base', source=source_cdb, color='#99CCFF', line_width=2, legend=u'1年期贷款基准利率')
-plot_cdb.line('date', 'spread', source=source_cdb, color='green', line_width=2, legend=u'利差')
+plot_cdb.line('date', 'spread', source=source_cdb, color='#66CC66', line_width=2, legend=u'利差')
 plot_cdb.title.text_font_size = "15pt"
 plot_cdb.title.text = u'10年期国开债收益率-1年期贷款基准利率'
 plot_cdb.title.text_font = "Microsoft YaHei"

@@ -1,5 +1,6 @@
 # encoding: utf-8
 import pandas as pd
+import numpy as np
 
 import currency.const as const
 import currency.data as data
@@ -22,7 +23,7 @@ def update_cny():
                        'ref': df[u'中间价:美元兑人民币'],
                        'spot': df[u'即期汇率:美元兑人民币']}
 
-source_usdcny = ColumnDataSource(data=dict(date=[], off=[], on=[]))
+source_usdcny = ColumnDataSource(data=dict(date=[], off=[], on=[], diff=[]))
 def update_usdcny():
     fname = u'%s/usdcny.xlsx'%(const.CURRENCY_DIR)    
     df = pd.read_excel(fname)
@@ -31,9 +32,25 @@ def update_usdcny():
                           'on': df[u'美元兑在岸人民币']}
     source_usdcny.data['diff'] = source_usdcny.data['off'] - source_usdcny.data['on']
 
+source_usdx = ColumnDataSource(data=dict(date=[], us=[], cn=[]))
+source_cfets = ColumnDataSource(data=dict(date=[], us=[], cn=[]))
+def update_cfets():
+    fname = '%s/cfets.xlsx'%(const.CURRENCY_DIR)
+    df = pd.read_excel(fname)
+    source_usdx.data = {'date': df.index,
+                        'us': df[u'美元指数'],
+                        'cn': df[u'CFETS人民币汇率指数']}
+    df = df.copy()
+    df.loc[df[u'CFETS人民币汇率指数'].shift() == df[u'CFETS人民币汇率指数'], u'CFETS人民币汇率指数'] = np.NAN
+    df = df.dropna()
+    source_cfets.data = {'date': df.index,
+                         'us': df[u'美元指数'],
+                         'cn': df[u'CFETS人民币汇率指数']}
+
 def update_all():
     update_cny()
     update_usdcny()
+    update_cfets()
 
 def get_plot(title, pct=False):
     tools = "pan,wheel_zoom,box_select,reset,hover"
@@ -74,7 +91,17 @@ hover_usdcny.tooltips = [(u'日期', '@date{%F}'),
 hover_usdcny.formatters = {'date': 'datetime'}
 hover_usdcny.mode = 'mouse'
 
+plot_cfets = get_plot(u'美元/人民币汇率指数')
+plot_cfets.line('date', 'cn', source=source_cfets, line_width=2, color='#d53e4f', legend=u'CFETS人民币汇率指数')
+plot_cfets.line('date', 'us', source=source_usdx, line_width=2, legend=u'美元指数')
+hover_cfets = plot_cfets.select(dict(type=HoverTool))
+hover_cfets.tooltips = [(u'日期', '@date{%F}'),
+                        (u'美元指数', '@us{0.00}'),
+                        (u'CFETS人民币汇率指数', '@cn{0.00}')]
+hover_cfets.formatters = {'date': 'datetime'}
+hover_cfets.mode = 'mouse'
+
 update_all()
 
-curdoc().add_root(column(plot_cny, plot_usdcny))
+curdoc().add_root(column(plot_cny, plot_usdcny, plot_cfets))
 curdoc().title = u'外汇市场'
